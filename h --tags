@@ -1,0 +1,101 @@
+[33mcommit a9e7dceaa97f3e9044e7b62676c874a237ff8b14[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;33mtag: v0.1[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: tcyfs <1574589059@qq.com>
+Date:   Mon Dec 17 11:48:24 2018 +0800
+
+    first commit
+
+[1mdiff --git a/back-end/.gitignore b/back-end/.gitignore[m
+[1mnew file mode 100644[m
+[1mindex 0000000..71fdec1[m
+[1m--- /dev/null[m
+[1m+++ b/back-end/.gitignore[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32m.idea/[m
+[32m+[m[32m__pycache__/[m
+[32m+[m[32mvenv/[m
+[32m+[m[32m.env[m
+[32m+[m[32mapp.db[m
+[32m+[m[32mmyblog.log*[m
+\ No newline at end of file[m
+[1mdiff --git a/back-end/app/__init__.py b/back-end/app/__init__.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a5c2abf[m
+[1m--- /dev/null[m
+[1m+++ b/back-end/app/__init__.py[m
+[36m@@ -0,0 +1,13 @@[m
+[32m+[m[32mfrom flask import Flask[m
+[32m+[m[32mfrom config import Config[m
+[32m+[m
+[32m+[m
+[32m+[m[32mdef create_app(config_class=Config):[m
+[32m+[m[32m    app = Flask(__name__)[m
+[32m+[m[32m    app.config.from_object(config_class)[m
+[32m+[m
+[32m+[m[32m    # 注册 blueprint[m
+[32m+[m[32m    from app.api import bp as api_bp[m
+[32m+[m[32m    app.register_blueprint(api_bp, url_prefix='/api')[m
+[32m+[m
+[32m+[m[32m    return app[m
+[1mdiff --git a/back-end/app/api/__init__.py b/back-end/app/api/__init__.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0d8aa2d[m
+[1m--- /dev/null[m
+[1m+++ b/back-end/app/api/__init__.py[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32mfrom flask import Blueprint[m
+[32m+[m
+[32m+[m[32mbp = Blueprint('api', __name__)[m
+[32m+[m
+[32m+[m[32m# 写在最后是为了防止循环导入，ping.py文件也会导入 bp[m
+[32m+[m[32mfrom app.api import ping[m
+[1mdiff --git a/back-end/app/api/ping.py b/back-end/app/api/ping.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ade6f85[m
+[1m--- /dev/null[m
+[1m+++ b/back-end/app/api/ping.py[m
+[36m@@ -0,0 +1,8 @@[m
+[32m+[m[32mfrom flask import jsonify[m
+[32m+[m[32mfrom app.api import bp[m
+[32m+[m
+[32m+[m
+[32m+[m[32m@bp.route('/ping', methods=['GET'])[m
+[32m+[m[32mdef ping():[m
+[32m+[m[32m    '''前端Vue.js用来测试与后端Flask API的连通性'''[m
+[32m+[m[32m    return jsonify('Pong!')[m
+[1mdiff --git a/back-end/config.py b/back-end/config.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..fa26978[m
+[1m--- /dev/null[m
+[1m+++ b/back-end/config.py[m
+[36m@@ -0,0 +1,9 @@[m
+[32m+[m[32mimport os[m
+[32m+[m[32mfrom dotenv import load_dotenv[m
+[32m+[m
+[32m+[m[32mbasedir = os.path.abspath(os.path.dirname(__file__))[m
+[32m+[m[32mload_dotenv(os.path.join(basedir, '.env'))[m
+[32m+[m
+[32m+[m
+[32m+[m[32mclass Config(object):[m
+[32m+[m[32m    pass[m
+[1mdiff --git a/back-end/myblog.py b/back-end/myblog.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0a23b5a[m
+[1m--- /dev/null[m
+[1m+++ b/back-end/myblog.py[m
+[36m@@ -0,0 +1,3 @@[m
+[32m+[m[32mfrom app import create_app[m
+[32m+[m
+[32m+[m[32mapp = create_app()[m
+[1mdiff --git a/back-end/requirements.txt b/back-end/requirements.txt[m
+[1mnew file mode 100644[m
+[1mindex 0000000..aed119d[m
+[1m--- /dev/null[m
+[1m+++ b/back-end/requirements.txt[m
+[36m@@ -0,0 +1,7 @@[m
+[32m+[m[32mClick==7.0[m
+[32m+[m[32mFlask==1.0.2[m
+[32m+[m[32mitsdangerous==1.1.0[m
+[32m+[m[32mJinja2==2.10[m
+[32m+[m[32mMarkupSafe==1.1.0[m
+[32m+[m[32mpython-dotenv==0.10.1[m
+[32m+[m[32mWerkzeug==0.14.1[m
